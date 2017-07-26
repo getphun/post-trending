@@ -8,6 +8,7 @@
 
 namespace PostTrending\Controller;
 use Post\Model\Post;
+use PostTrending\Model\PostTrending as PTrending;
 
 class PostController extends \SiteController
 {
@@ -19,7 +20,7 @@ class PostController extends \SiteController
             'filters'       => 'ga:pagePath=@/post/read',
             'dimensions'    => 'ga:pagePath',
             'sort'          => '-ga:pageviews',
-            'max-results'   => ( $config['items'] + 20 )
+            'max-results'   => ( $config['items'] + ceil($config['items']/2) )
         ];
         
         $result = $client->data_ga->get('ga:' . $view_id, $date_start, $date_end, 'ga:pageviews', $options);
@@ -49,36 +50,26 @@ class PostController extends \SiteController
             ];
         }
         
-        $model = $config['model'];
-        $model::truncate();
-        $model::createMany($insert);
+        usort($insert, function($a,$b){
+            return $b['views'] - $a['views'];
+        });
+        
+        PTrending::truncate();
+        PTrending::createMany($insert);
         
         return count($insert) . ' inserted';
     }
     
     public function calculateAction(){
         $config = $this->config->{'post-trending'};
-        if(!$config['trending'] && !$config['popular'])
-            return $this->ajax(['error'=>'no need']);
-        
         $ga_client = $this->google->getGAClient();
         
-        $configs = [
-            'trending' => [
-                'model' => 'PostTrending\\Model\\PostTrending',
-                'start' => date('Y-m-d', strtotime((0 - $config['trending']['last_days']).' days')),
-                'items' => $config['trending']['total_items']
-            ],
-            'popular' => [
-                'model' => 'PostTrending\\Model\\PostPopular',
-                'start' => $config['popular']['time_start'],
-                'items' => $config['popular']['total_items']
-            ]
+        $config = [
+            'start' => date('Y-m-d', strtotime((0 - $config['last_days']).' days')),
+            'items' => $config['total_items']
         ];
         
-        $result = [];
-        foreach($configs as $name => $conf)
-            $result[$name] = $this->calculate($conf, $ga_client);
+        $result = $this->calculate($config, $ga_client);
         
         $this->ajax(['error'=>false, 'data'=>$result]);
     }

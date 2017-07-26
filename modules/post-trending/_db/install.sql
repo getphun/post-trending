@@ -3,9 +3,3 @@ CREATE TABLE IF NOT EXISTS `post_trending` (
     `post` INTEGER NOT NULL,
     `views` INTEGER DEFAULT 0
 );
-
-CREATE TABLE IF NOT EXISTS `post_popular` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `post` INTEGER NOT NULL,
-    `views` INTEGER DEFAULT 0
-);

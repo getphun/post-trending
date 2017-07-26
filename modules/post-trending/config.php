@@ -21,7 +21,6 @@ return [
     '_autoload' => [
         'classes' => [
             'PostTrending\\Model\\PostTrending'         => 'modules/post-trending/model/PostTrending.php',
-            'PostTrending\\Model\\PostPopular'          => 'modules/post-trending/model/PostPopular.php',
             'PostTrending\\Controller\\PostController'  => 'modules/post-trending/controller/PostController.php'
         ],
         'files' => []
@@ -35,21 +34,7 @@ return [
         ]
     ],
     'post-trending' => [
-        'trending' => [
-            'last_days' => 3,
-            'total_items' => 15,
-            'per_category' => FALSE,
-            'per_tag' => FALSE,
-            'per_canal' => FALSE,
-            'per_user' => FALSE
-        ],
-        'popular' => [
-            'time_start' => '2005-01-01',
-            'total_items' => 15,
-            'per_category' => FALSE,
-            'per_tag' => FALSE,
-            'per_canal' => FALSE,
-            'per_user' => FALSE
-        ]
+        'last_days' => 3,
+        'total_items' => 15
     ]
 ];
