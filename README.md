@@ -26,3 +26,7 @@ Keterangan opsi-opsi tersebut adalah:
 Agar proses perhitungan bisa berjalan dengan baik, pastikan Anda menambahkan cron
 yang memanggil `curl HOST/post/-/trending` setiap jam 2 malam agar
 trending post terupdate.
+
+```
+0 2 * * * curl HOST/post/-/trending
+```
